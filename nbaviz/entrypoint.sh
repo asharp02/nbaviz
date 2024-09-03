@@ -6,7 +6,7 @@ set -e
 
 # Wait for the database to be ready
 echo "Waiting for database..."
-while ! nc -z db 5432; do
+while ! nc -z vizdb 5432; do
   sleep 1
   # Check if the retry count has exceeded the maximum limit
   if [ "$RETRY_COUNT" -ge 10 ]; then
@@ -18,11 +18,12 @@ done
 
 # Apply database migrations
 echo "Applying database migrations..."
-python manage.py migrate
+ls app -al
+python app/manage.py migrate
 
 # Collect static files (if needed)
 echo "Collecting static files..."
-python manage.py collectstatic --noinput
+python app/manage.py collectstatic --noinput
 
 # Start the Django server
 echo "Starting server with command: $@"
